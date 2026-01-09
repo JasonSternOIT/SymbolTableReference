@@ -91,7 +91,7 @@ public:
         return parent;
     }
 
-    virtual void addChild(std::shared_ptr<Node> child) override
+    virtual void addChild(const std::shared_ptr<Node> child) override
     {
         children.emplace_back(child);
     }

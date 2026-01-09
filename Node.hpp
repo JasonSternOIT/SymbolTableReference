@@ -21,7 +21,7 @@ public:
     virtual std::uint32_t getLine() const = 0;
     virtual std::string getName() const = 0;
     virtual std::weak_ptr<Node> getParent() const = 0;
-    virtual void addChild(std::shared_ptr<Node> child) = 0;
+    virtual void addChild(const std::shared_ptr<Node> child) = 0;
 
     virtual ~Node() = default;
 

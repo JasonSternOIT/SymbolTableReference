@@ -14,7 +14,7 @@ private:
 public:
     virtual ~SymbolTableImplementation() = default;
 
-    std::shared_ptr<Node> lookup(const std::string& name)
+    virtual std::shared_ptr<Node> lookup(const std::string& name) override
     {
         std::lock_guard<std::mutex> guard(children_mutex);
         std::shared_ptr<Node> result = nullptr;
@@ -33,7 +33,7 @@ public:
         return result;       
     }
 
-    virtual void insert(const std::string& name, std::shared_ptr<Node> node)
+    virtual void insert(const std::string& name, const std::shared_ptr<Node> node) override
     {
         std::lock_guard<std::mutex> guard(children_mutex);
         children.emplace_back(node);
