@@ -11,8 +11,8 @@ static std::shared_ptr<SymbolTable> symbol_table = SymbolTable::createInstance()
 
 int main()
 {
-    std::shared_ptr<Node> child_node = Node::createNode(nullptr, "child", 1, Node::SymbolType::VARIABLE, "file.cpp", 10);
-    std::shared_ptr<Node> nested_node = Node::createNode(child_node, "nested", 1, Node::SymbolType::VARIABLE, "file.cpp", 10);
+    std::shared_ptr<Node> child_node = Node::createNode(nullptr, "child", Node::SymbolType::VARIABLE, "file.cpp", 10);
+    std::shared_ptr<Node> nested_node = Node::createNode(child_node, "nested", Node::SymbolType::VARIABLE, "file.cpp", 10);
     nested_node->addChild(nested_node);
     symbol_table->insert("child", child_node);
     if (!symbol_table->lookup("nested"))

@@ -1,7 +1,12 @@
 #include "Node.hpp"
 
 #include <memory>
+#include <string>
+#include <unordered_map>
 #include <vector>
+
+static std::uint32_t global_identifier_counter = 0;
+static std::unordered_map<std::uint32_t, std::weak_ptr<Node>> node_registry;
 
 class NodeImplementation : public Node, public std::enable_shared_from_this<NodeImplementation>
 {
@@ -90,10 +95,25 @@ public:
     }
 };
 
-std::shared_ptr<Node> Node::createNode(const std::shared_ptr<Node> parent,
-    const std::string& name, std::uint32_t unique_identifier,  SymbolType type,
-    std::string file, std::uint32_t line)
+std::shared_ptr<Node> Node::lookup(const std::uint32_t identifier)
 {
-    return std::dynamic_pointer_cast<Node>(std::make_shared<NodeImplementation>(parent, name,
-         unique_identifier, type, file, line));
+    auto node = node_registry.find(identifier);
+    if (node != node_registry.end())
+    {
+        if (auto shared_node = node->second.lock())
+        {
+            return shared_node;
+        }
+    }
+    return nullptr;
+}
+
+std::shared_ptr<Node> Node::createNode(const std::shared_ptr<Node> parent,
+    const std::string& name, const SymbolType type,
+    const std::string& file, const std::uint32_t line)
+{
+    ++global_identifier_counter;
+    auto node = std::make_shared<NodeImplementation>(parent, name, global_identifier_counter, type, file, line);
+    node_registry[global_identifier_counter] = node;
+    return node;
 }

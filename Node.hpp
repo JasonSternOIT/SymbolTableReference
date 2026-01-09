@@ -23,7 +23,10 @@ public:
     virtual std::weak_ptr<Node> getParent() const = 0;
     virtual void addChild(std::shared_ptr<Node> child) = 0;
 
-    static std::shared_ptr<Node> createNode(const std::shared_ptr<Node> parent,
-        const std::string& name, std::uint32_t unique_identifier, SymbolType type,
-        std::string file, std::uint32_t line);
+    virtual ~Node() = default;
+
+    static std::shared_ptr<Node> lookup(const std::uint32_t identifier);
+
+    static std::shared_ptr<Node> createNode(const std::shared_ptr<Node> parent, const std::string& name,
+        const SymbolType type, const std::string& file, const std::uint32_t line);
 };
