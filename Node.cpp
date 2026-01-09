@@ -1,12 +1,14 @@
 #include "Node.hpp"
 
 #include <memory>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
 static std::uint32_t global_identifier_counter = 0;
 static std::unordered_map<std::uint32_t, std::weak_ptr<Node>> node_registry;
+static std::mutex node_registry_mutex;
 
 class NodeImplementation : public Node, public std::enable_shared_from_this<NodeImplementation>
 {
@@ -97,6 +99,7 @@ public:
 
 std::shared_ptr<Node> Node::lookup(const std::uint32_t identifier)
 {
+    std::lock_guard<std::mutex> guard(node_registry_mutex);
     auto node = node_registry.find(identifier);
     if (node != node_registry.end())
     {
@@ -112,6 +115,7 @@ std::shared_ptr<Node> Node::createNode(const std::shared_ptr<Node> parent,
     const std::string& name, const SymbolType type,
     const std::string& file, const std::uint32_t line)
 {
+    std::lock_guard<std::mutex> guard(node_registry_mutex);
     ++global_identifier_counter;
     auto node = std::make_shared<NodeImplementation>(parent, name, global_identifier_counter, type, file, line);
     node_registry[global_identifier_counter] = node;
