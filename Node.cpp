@@ -26,6 +26,18 @@ public:
 
     virtual std::shared_ptr<Node> lookup(const std::string& name) override
     {
+        // four paths for this. the correct one depends on use case:
+        // we are the object
+        if (this->name == name)
+        {
+            return shared_from_this();
+        }           
+        // we are the scope but not the object, traverse up
+        if (auto node_parent = parent.lock())
+        {
+            return node_parent->lookup(name);
+        }
+        // we are the parent, traverse down        
         for (auto& child : children)
         {
             if (child->getName() == name)
@@ -38,10 +50,7 @@ public:
                 return result;
             }
         }
-        if (this->name == name)
-        {
-            return shared_from_this();
-        }        
+        // the object doesn't exist within the scope of the symbol table
         return nullptr;
     }
 
