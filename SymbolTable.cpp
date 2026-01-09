@@ -1,4 +1,5 @@
 #include <memory>
+#include <mutex>
 #include <string>
 #include <vector>
 #include "Node.hpp"
@@ -8,11 +9,14 @@ class SymbolTableImplementation : public SymbolTable, std::enable_shared_from_th
 {
 private:
     std::vector<Node> children;
+    std::mutex children_mutex;
+
 public:
     virtual ~SymbolTableImplementation() = default;
 
     std::shared_ptr<Node> lookup(const std::string& name)
     {
+        std::lock_guard<std::mutex> guard(children_mutex);
         std::shared_ptr<Node> result = nullptr;
         for (auto& child : children)
         {
@@ -31,6 +35,7 @@ public:
 
     virtual void insert(const std::string& name, std::shared_ptr<Node> node)
     {
+        std::lock_guard<std::mutex> guard(children_mutex);
         children.emplace_back(node);
     }
 
