@@ -10,7 +10,7 @@ private:
     std::vector<Node> children;
 public:
     virtual ~SymbolTableImplementation() = default;
-    
+
     std::shared_ptr<Node> lookup(const std::string& name)
     {
         std::shared_ptr<Node> result = nullptr;
@@ -31,7 +31,7 @@ public:
 
     virtual void insert(const std::string& name, std::shared_ptr<Node> node)
     {
-        children.push_back(*node);
+        children.emplace_back(node);
     }
 
     virtual ~SymbolTableImplementation() = default;
