@@ -22,6 +22,8 @@ public:
         {        
         }
 
+    virtual ~NodeImplementation() = default;
+
     virtual std::shared_ptr<Node> lookup(const std::string& name) override
     {
         for (auto& child : children)

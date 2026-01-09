@@ -9,6 +9,8 @@ class SymbolTableImplementation : public SymbolTable, std::enable_shared_from_th
 private:
     std::vector<Node> children;
 public:
+    virtual ~SymbolTableImplementation() = default;
+    
     std::shared_ptr<Node> lookup(const std::string& name)
     {
         std::shared_ptr<Node> result = nullptr;
